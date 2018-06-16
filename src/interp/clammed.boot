@@ -77,8 +77,12 @@ isValidType form ==
     sayKeyedMsg("S2IR0005",[form])
     NIL
 
-  badDoubles := CONS($QuotientField, '(Complex Polynomial Expression))
-  form is [T1, [T2, :.]] and T1 = T2 and member(T1, badDoubles) => NIL
+  -- This should not be stopped here! Such types are actually used in them
+  -- FriCAS library. E.g. 'integrate(sin(1/x),x) internally generates
+  -- (Mapping (InputForm) (List (Expression (Expression (Complex (Integer))))))
+  -- This is valid but coerce to Any generates an error message.
+  --badDoubles := CONS($QuotientField, '(Complex Polynomial Expression))
+  --form is [T1, [T2, :.]] and T1 = T2 and member(T1, badDoubles) => NIL
 
   form is [=$QuotientField,D] and not isPartialMode(D) and
     ofCategory(D,'(Field)) => NIL
