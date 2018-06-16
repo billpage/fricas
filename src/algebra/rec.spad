@@ -82,8 +82,8 @@ Taylor series expansion.
     oprecur := operator('rootOfRec)$BasicOperator
     opADE := operator('rootOfADE)$BasicOperator
 
-    setProperty(oprecur, '%dummyVar, 1 pretend None)
-    setProperty(opADE, '%dummyVar, 1 pretend None)
+    setProperty(oprecur, '%dummyVar, coerce(1)$AnyFunctions1(Integer))
+    setProperty(opADE, '%dummyVar, coerce(1)$AnyFunctions1(Integer))
 
 )if false
 
@@ -120,10 +120,10 @@ moment, similar to the indexing variable in sum and product.
                        gen : Union(List F -> List F, "failed"))
 
     getINFOREC(infoOp : BasicOperator) : INFOREC ==
-        property(infoOp, '%INFOREC)::None pretend INFOREC
+        retract(property(infoOp, '%INFOREC)::Any)$AnyFunctions1(INFOREC)
 
     setINFOREC(infoOp : BasicOperator, rec : INFOREC) : Void ==
-        setProperty(infoOp, '%INFOREC, rec pretend None)
+        setProperty(infoOp, '%INFOREC, coerce(rec)$AnyFunctions1(INFOREC))
 
 
     INFOSER ==> Record(eqn : F,
@@ -137,10 +137,10 @@ moment, similar to the indexing variable in sum and product.
                        ex? : Boolean)
 
     getINFOSER(infoOp : BasicOperator) : INFOSER ==
-        property(infoOp, '%INFOSER)::None pretend INFOSER
+        retract(property(infoOp, '%INFOSER)::Any)$AnyFunctions1(INFOSER)
 
     setINFOSER(infoOp : BasicOperator, ser : INFOSER) : Void ==
-        setProperty(infoOp, '%INFOSER, ser pretend None)
+        setProperty(infoOp, '%INFOSER, coerce(ser)$AnyFunctions1(INFOSER))
 
 )if false
 
@@ -363,7 +363,7 @@ how many initial values are necessary.
         bracket(cons(RecEq, RecList))$OutputForm
 
     setProperty(oprecur, '%specialDisp,
-                ddrec@(List F -> OutputForm) pretend None)
+                coerce(ddrec)$AnyFunctions1(List F -> OutputForm))
 
     opdiff := operator(operator('%diff)$CommonOperators)$F
 
@@ -373,7 +373,7 @@ how many initial values are necessary.
         kernel(opdiff, [eval(kernel(oprecur, l), xF, dummyF), dummyF, xF])
 
     setProperty(oprecur, '%specialDiff,
-                diffRec@((List F, Symbol) -> F) pretend None)
+                coerce(diffRec)$AnyFunctions1((List F, Symbol) -> F))
 
 )if false
 
@@ -553,7 +553,7 @@ solution and determine the valuation.
 
 
     setProperty(opADE, '%specialDisp,
-                ddADE@(List F -> OutputForm) pretend None)
+                coerce(ddADE)$AnyFunctions1(List F -> OutputForm))
 
     diffADE(l : List F, x : Symbol) : F ==
         dummyF := new()$Symbol :: F
@@ -561,7 +561,7 @@ solution and determine the valuation.
         kernel(opdiff, [eval(kernel(opADE, l), xF, dummyF), dummyF, xF])
 
     setProperty(opADE, '%specialDiff,
-                diffADE@((List F, Symbol) -> F) pretend None)
+                coerce(diffADE)$AnyFunctions1((List F, Symbol) -> F))
 
 
 --Copyright (c) 2006-2007, Martin Rubey <Martin.Rubey@univie.ac.at>

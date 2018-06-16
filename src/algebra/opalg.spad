@@ -41,7 +41,7 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
       ++ makeop should be local but conditional
 
   Implementation ==> FAB add
-    import from NoneFunctions1(%)
+    --import from NoneFunctions1(%)
     import from BasicOperatorFunctions1(M)
 
     Rep := FAB
@@ -76,7 +76,7 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
     termcopy t          == [[rm.coef, rm.monom] for rm in t]
     characteristic()    == characteristic()$R
     mkop(r, fg)         == [[r, fg]$RM]$TERM :: %
-    evaluate(f, g)   == nocopy setProperty(retract(f)@OP, OPEVAL, g pretend None)
+    evaluate(f, g)   == nocopy setProperty(retract(f)@OP, OPEVAL, coerce(g)$AnyFunctions1(M -> M))
 
     if R has OrderedSet then
       makeop(r, fg) == (r >= 0 => mkop(r, fg); - mkop(-r, fg))
@@ -94,7 +94,7 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
       (inv(retract(x)@TERM)) ^ (-i)
 
     evaluateInverse(f, g) ==
-      nocopy setProperty(retract(f)@OP, INVEVAL, g pretend None)
+      nocopy setProperty(retract(f)@OP, INVEVAL, coerce(g)$AnyFunctions1(M -> M))
 
     coerce(x : %) : O ==
       zero? x => (0$R)::O
@@ -137,18 +137,18 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
     if M has ExpressionSpace then
       opeval(op, r) ==
         (func := property(op, OPEVAL)) case "failed" => kernel(op, r)
-        ((func::None) pretend (M -> M)) r
+        (retract(func::Any)$AnyFunctions1(M -> M)) r
 
     else
       opeval(op, r) ==
         (func := property(op, OPEVAL)) case "failed" =>
           error "eval: operator has no evaluation function"
-        ((func::None) pretend (M -> M)) r
+        (retract(func::Any)$AnyFunctions1(M -> M)) r
 
     opInvEval(op, r) ==
       (func := property(op, INVEVAL)) case "failed" =>
          error "eval: operator has no inverse evaluation function"
-      ((func::None) pretend (M -> M)) r
+      (retract(func::Any)$AnyFunctions1(M -> M)) r
 
     termeval(t, r)  ==
       for rm in reverse t repeat r := rmeval(rm, r)
@@ -197,7 +197,7 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
       x : % * r : R        == x * (r::%)
       adjoint x        == +/[t.c * termadj(t.k) for t in listOfTerms x]
       rmadj t          == conjug(t.coef) * monomadj(t.monom)
-      adjoint(op, adj) == nocopy setProperty(retract(op)@OP, OPADJ, adj::None)
+      adjoint(op, adj) == nocopy setProperty(retract(op)@OP, OPADJ, coerce(adj)$AnyFunctions1(%))
 
       termadj t ==
         ans : % := 1
@@ -212,7 +212,7 @@ ModuleOperator(R : Ring, M : LeftModule(R)) : Exports == Implementation where
       opadj op ==
         (adj := property(op, OPADJ)) case "failed" =>
            error "adjoint: operator does not have a defined adjoint"
-        (adj::None) pretend %
+        retract(adj::Any)$AnyFunctions1(%)
 
       if R has conjugate : R -> R then conjug r == conjugate r else conjug r == r
 

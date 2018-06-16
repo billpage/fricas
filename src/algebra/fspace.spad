@@ -259,11 +259,11 @@ ExpressionSpace() : Category == Defn where
       s := set(l := kernels f)
       for k in l repeat
           t :=
-              (u := property(operator k, DUMMYVAR)) case None =>
+              (u := property(operator k, DUMMYVAR)) case Any =>
                   arg := argument k
                   s0  := remove!(retract(second arg)@K, allKernels first arg)
                   arg := rest rest arg
-                  n   := (u::None) pretend N
+                  n   := retract(u::Any)$AnyFunctions1(N)
                   if n > 1 then arg := rest arg
                   union(s0, allk arg)
               allk argument k
@@ -364,8 +364,8 @@ ExpressionSpaceFunctions1(F : ExpressionSpace, S : Type) : with
     --  prop  contains an evaluation function List S -> S
     map(F2S, prop, k) ==
       args := [F2S x for x in argument k]$List(S)
-      (p := property(operator k, prop)) case None =>
-                                  ((p::None) pretend (List S -> S)) args
+      (p := property(operator k, prop)) case Any =>
+        (retract(p::Any)$AnyFunctions1(List S -> S)) args
       error "Operator does not have required property"
 
 )abbrev package ES2 ExpressionSpaceFunctions2
@@ -609,7 +609,7 @@ FunctionSpace(R : Comparable) : Category == Definition where
       eval(f : %, ls : List OP, lg : List %, x : SY) ==
         eval(f, ls, [compiledFunction(g, x) for g in lg])
 
-      setProperty(opdiff, SPECIALINPUT, indiff@(List % -> InputForm) pretend None)
+      setProperty(opdiff, SPECIALINPUT, coerce(indiff)$AnyFunctions1(List % -> InputForm))
 
     variables(lx : List(%)) ==
       l := empty()$List(SY)
@@ -696,8 +696,8 @@ FunctionSpace(R : Comparable) : Category == Definition where
         opname :=
           zero?(rec.level) => sub(rec.name, rec.sub)
           differentiate(rec.name, rec.level)
-        (f := property(rec.orig_op, '%diffDisp)) case None =>
-            ((f::None) pretend (List OutputForm -> OutputForm))
+        (f := property(rec.orig_op, '%diffDisp)) case Any =>
+            (retract(f::Any)$AnyFunctions1(List OutputForm -> OutputForm))
                (cons(opname, rec.arg))
         prefix(opname, rec.arg)
 
@@ -824,8 +824,8 @@ FunctionSpace(R : Comparable) : Category == Definition where
           v::SY = x => 1
           0
         ak := argument k
-        (fn := property(operator k, SPECIALDIFF)) case None =>
-           ((fn::None) pretend ((List %, SY) -> %)) (ak, x)
+        (fn := property(operator k, SPECIALDIFF)) case Any =>
+           (retract(fn::Any)$AnyFunctions1((List %, SY) -> %)) (ak, x)
         +/[g(ak)*dyx for g in kgrad k for y in ak
             | (dyx := differentiate(y, x)) ~= 0]
 
@@ -960,11 +960,11 @@ FunctionSpace(R : Comparable) : Category == Definition where
         sk1 = (r2.orig_k)::%
 
       setProperty(opdiff, SPECIALEQUAL,
-                          equaldiff@((K, K) -> Boolean) pretend None)
+                          coerce(equaldiff)$AnyFunctions1((K, K) -> Boolean))
       setProperty(opdiff, SPECIALDIFF,
-                          diffdiff@((List %, SY) -> %) pretend None)
+                          coerce(diffdiff)$AnyFunctions1((List %, SY) -> %))
       setProperty(opdiff, SPECIALDISP,
-                              ddiff@(List % -> OutputForm) pretend None)
+                          coerce(ddiff)$AnyFunctions1(List % -> OutputForm))
 
       if not(R has IntegralDomain) then
         mainKernel x         == mainVariable numer x

@@ -119,6 +119,8 @@ Any() : SetCategory with
      any(domain, object) ==
        (isValidType(domain)$Lisp)@Boolean => [domain, object]
        domain := devaluate(domain)$Lisp
+       -- debug
+       output("domain: ",domain::OutputForm)$OutputPackage
        (isValidType(domain)$Lisp)@Boolean => [domain, object]
        error "function any must have a domain as first argument"
 

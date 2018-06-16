@@ -391,10 +391,10 @@ AlgebraicFunction(R, F) : Exports == Implementation where
 
     evaluate(opalg, ialg)$BasicOperatorFunctions1(F)
     setProperty(opalg, SPECIALDIFF,
-                              dvalg@((List F, SE) -> F) pretend None)
+                              coerce(dvalg)$AnyFunctions1((List F, SE) -> F))
     setProperty(opalg, SPECIALDISP,
-                              dalg@(List F -> OutputForm) pretend None)
-    setProperty(opalg, SPECIALEQUAL, eqopalg@((K, K) -> Boolean) pretend None)
+                              coerce(dalg)$AnyFunctions1(List F -> OutputForm))
+    setProperty(opalg, SPECIALEQUAL, coerce(eqopalg)$AnyFunctions1((K, K) -> Boolean))
 
     POLYCATQ ==> PolynomialCategoryQuotientFunctions(IndexedExponents(K),
                                                      K, R, P, F)
@@ -450,9 +450,9 @@ AlgebraicFunction(R, F) : Exports == Implementation where
     evaluate(oprootsum, irootsum)$BasicOperatorFunctions1(F)
 
     setProperty(oprootsum, SPECIALDIFF,
-                        dvrootsum@((List F, SE) -> F) pretend None)
+                        coerce(dvrootsum)$AnyFunctions1((List F, SE) -> F))
     setProperty(oprootsum, SPECIALDISP,
-                        drootsum@(List F -> OutputForm) pretend None)
+                        coerce(drootsum)$AnyFunctions1(List F -> OutputForm))
 
     if R has RetractableTo Integer then
       import from PolynomialRoots(IndexedExponents K, K, R, P, F)
@@ -569,8 +569,7 @@ AlgebraicFunction(R, F) : Exports == Implementation where
                                            retract(second argument k)@K)
         monomial(1, 1) - k::F::UP
 
-    setProperty(oproot, SPECIALDISP,
-                              droot@(List F -> OutputForm) pretend None)
+    setProperty(oproot, SPECIALDISP, coerce(droot)$AnyFunctions1(List F -> OutputForm))
 
 --Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 --All rights reserved.

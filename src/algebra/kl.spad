@@ -286,7 +286,7 @@ Kernel(S : Comparable) : Exports == Implementation where
 
     preds o ==
       (u := property(o, PMPRED)) case "failed" => []
-      (u::None) pretend List(Any)
+      retract(u::Any)$AnyFunctions1(List(Any))
 
     symbolIfCan k ==
       has?(operator k, SYMBOL) => name operator k
@@ -299,8 +299,8 @@ Kernel(S : Comparable) : Exports == Implementation where
         f(k1, k2)
 
     kernelEnterInCache(k : %) : % ==
-        if (f0 := property(operator k, SPECIALEQUAL)) case None then
-            f1 := (f0::None) pretend ((%, %) -> Boolean)
+        if (f0 := property(operator k, SPECIALEQUAL)) case Any then
+            f1 := retract(f0::Any)$AnyFunctions1((%, %) -> Boolean)
             (res := linearSearch(k, y +-> kerEqual(k, y, f1))) case % =>
                 return res::%
         enterInCache(k, triage)
@@ -325,8 +325,8 @@ Kernel(S : Comparable) : Exports == Implementation where
     -- for instance with formal derivatives.
     coerce(k : %) : OutputForm ==
       (v := symbolIfCan k) case Symbol => v::Symbol::OutputForm
-      (f := property(o := operator k, SPECIALDISP)) case None =>
-        ((f::None) pretend (List S -> OutputForm)) (argument k)
+      (f := property(o := operator k, SPECIALDISP)) case Any =>
+        (retract(f::Any)$AnyFunctions1(List S -> OutputForm)) (argument k)
       l := [x::OutputForm for x in argument k]$List(OutputForm)
       (u := display o) case "failed" => prefix(name(o)::OutputForm, l)
       (u::(List OutputForm -> OutputForm)) l
@@ -336,8 +336,8 @@ Kernel(S : Comparable) : Exports == Implementation where
       operator(k1) ~= operator(k2) => B2Z(operator(k1) < operator(k2))
       (n1 := #(argument k1)) ~= (n2 := #(argument k2)) => B2Z(n1 < n2)
       -- Handled by linear search earlier
-      -- ((func := property(operator k1, SPECIALEQUAL)) case None) and
-      --  (((func::None) pretend ((%, %) -> Boolean)) (k1, k2)) => 0
+      -- ((func := property(operator k1, SPECIALEQUAL)) case Any) and
+      --  ((retract(func::Any)$AnyFunctions1((%, %) -> Boolean)) (k1, k2)) => 0
       for x1 in argument(k1) for x2 in argument(k2) repeat
         x1 ~= x2 => return B2Z(smaller?(x1, x2))
       0
@@ -345,8 +345,8 @@ Kernel(S : Comparable) : Exports == Implementation where
     if S has ConvertibleTo InputForm then
       convert(k : %) : InputForm ==
         (v := symbolIfCan k) case Symbol => convert(v::Symbol)@InputForm
-        (f := property(o := operator k, SPECIALINPUT)) case None =>
-          ((f::None) pretend (List S -> InputForm)) (argument k)
+        (f := property(o := operator k, SPECIALINPUT)) case Any =>
+          (retract(f::Any)$AnyFunctions1(List S -> InputForm)) (argument k)
         l := [convert x for x in argument k]$List(InputForm)
         (u := input operator k) case "failed" =>
           convert concat(convert name operator k, l)

@@ -128,8 +128,8 @@ ConstantLinearDependence(R, F) : Exports == Implementation where
         op := operator(operator(k))$EF
         args := argument(k)
         nargs : List(EF)
-        if (u := property(op, DUMMYVAR)) case None then
-            n := u::None pretend NonNegativeInteger
+        if (u := property(op, DUMMYVAR)) case Any then
+            n := retract(u::Any)$AnyFunctions1(NonNegativeInteger)
             da := retract(a1 := second(args))@K1
             if not(member?(da, ldmvar)) then
                 ldmvar := cons(da, ldmvar)

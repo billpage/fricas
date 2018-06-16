@@ -939,12 +939,12 @@ FunctionSpaceAttachPredicates(R, F, D) : Exports == Implementation where
 
     preds k ==
       (u := property(operator k, PMPRED)) case "failed" => empty()
-      (u::None) pretend List(Any)
+      retract(u::Any)$AnyFunctions1(List(Any))
 
     -- Looks fishy, but we try to preserve meaning
     st(k, l) ==
       kk := copy operator k
-      setProperty(kk, PMPRED, concat(preds k, l) pretend None)
+      setProperty(kk, PMPRED, coerce(concat(preds k, l))$AnyFunctions1(List Any))
       kernel(kk, empty()$List(F))
 
     suchThat(p : F, l : List(D -> Boolean)) ==
