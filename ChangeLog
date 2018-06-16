@@ -1,3 +1,98 @@
+2018-06-15  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/integer.spad, src/algebra/sf.spad,
+	src/interp/category.boot, src/interp/compiler.boot,
+	src/interp/iterator.boot: Minor cleanups and fixes
+
+2018-06-14  Qian Yun  <oldk1331@gmail.com>
+
+	* src/algebra/integer.spad: Inline optimize 'powmod'
+
+2018-06-13  Qian Yun  <oldk1331@gmail.com>
+
+	* src/algebra/limitps.spad: Fix limit of Fresnel functions
+
+2018-06-12  Johannes Grabmeier <johannes@grabmeier.net>
+
+	* src/algebra/pf.spad: Implement 'sqrt', reorganize
+
+2018-06-11  Qian Yun  <oldk1331@gmail.com>
+
+	* src/algebra/aggcat.spad, src/algebra/vector.spad:
+	Misc optimizations
+
+2018-06-11  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/boo_db.input, src/interp/compiler.boot,
+	src/interp/daase.lisp, src/interp/database.boot:
+	Misc cleanups
+
+2018-06-10  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/define.boot, src/interp/i-syscmd.boot,
+	src/interp/setq.lisp: Clean up useless synonyms
+
+2018-06-10  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/compiler.boot: Beter detect non-returning
+	computations
+
+2018-06-07  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/daase.lisp, src/interp/info.boot:
+	Misc cleanups
+
+2018-06-06  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/br-con.boot: Fix breakage due to recent
+	cleanup
+
+2018-06-04  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/interop.boot: Workaround for 0 and 1
+
+2018-06-04  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/c-doc.boot, src/interp/c-util.boot,
+	src/interp/compiler.boot, src/interp/define.boot,
+	src/interp/iterator.boot, src/interp/parse.boot,
+	src/interp/postpar.boot, src/interp/property.lisp,
+	src/interp/s-parser.boot: Simplify postparse
+
+2018-06-03  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/scene.spad, src/interp/br-con.boot,
+	src/interp/br-saturn.boot, src/interp/br-search.boot,
+	src/interp/cparse.boot, src/interp/int-top.boot:
+	Misc cleanups
+
+2018-06-02  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/evalut.spad, src/hyper/event.c,
+	src/hyper/ex2ht.c, src/hyper/hyper.h,
+	src/hyper/initx.c, src/hyper/spadbuf.c,
+	src/hyper/spadint.c: Misc cleanups
+
+2018-06-02  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/array2.spad: Another fix for special matrices
+
+2018-06-02  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/interp/i-toplev.boot, src/interp/int-top.boot,
+	src/interp/server.boot: Correctly suppress output
+	when requested
+
+2018-06-01  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/hyper/spadint.c, src/interp/br-con.boot,
+	src/interp/cattable.boot, src/interp/i-eval.boot:
+	Fix evaluation of types in HyperDoc
+
+2018-05-30  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
+
+	* src/algebra/array2.spad: Fix 'row' and 'column'
+
 2018-05-28  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
 
 	* src/interp/i-spec1.boot: Fix case with variable type
@@ -7587,9 +7682,6 @@
 
 	* src/input/unittest.input.pamphlet, src/input/Makefile.in: test
 	unittesting facility. (1 failure!)
-
-	* src/input/mantepse.input.pamphlet: Somos==true is not working
-	correctly, Somos and maxPower==1 should throw an error.
 
 2010-03-11  Waldek Hebisch  <hebisch@math.uni.wroc.pl>
 

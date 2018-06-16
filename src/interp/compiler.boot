@@ -160,7 +160,7 @@ compLambda(x is ["+->", vl, body], m, e) ==
                  ress
              stackAndThrow ["compLambda: malformed argument list", x]
         stackAndThrow ["compLambda: malformed argument list", x]
-    stackAndThrow ["compLambda: signature needed", x]
+    nil
 
 getFreeList(u, bound, free, e) ==
     atom u =>
@@ -523,13 +523,13 @@ substituteIntoFunctorModemap(argl,modemap is [[dc,:sig],:.],e) ==
 
 --% SETQ
 
-compSetq(["LET",form,val],m,E) == compSetq1(form,val,m,E)
+compSetq([":=", form, val], m, E) == compSetq1(form, val, m, E)
 
 compSetq1(form,val,m,E) ==
   IDENTP form => setqSingle(form,val,m,E)
   form is [":",x,y] =>
     [.,.,E']:= compMakeDeclaration(form,$EmptyMode,E)
-    compSetq(["LET",x,val],m,E')
+    compSetq([":=", x, val], m, E')
   form is [op,:l] =>
     op="CONS"  => setqMultiple(uncons form,val,m,E)
     op = "@Tuple" => setqMultiple(l, val, m, E)
@@ -893,6 +893,7 @@ canReturn(expr,level,exitCount,ValueFlag) ==  --SPAD: exit and friends
     expr is [.,count,data] => canReturn(data.expr,level,count,count=level)
   level=exitCount and not ValueFlag => nil
   op="SEQ" => or/[canReturn(u,level+1,exitCount,false) for u in rest expr]
+  op = "error" => nil
   op="TAGGEDreturn" => nil
   op="CATCH" =>
     [.,gs,data]:= expr
@@ -1033,7 +1034,7 @@ compColon([":",f,t],m,e) ==
       signature:=
         ["Mapping",newTarget,:
           [(x is [":",a,m] => m;
-              getmode(x,e) or systemErrorHere '"compColonOld") for x in argl]]
+              getmode(x,e) or systemErrorHere '"compColon") for x in argl]]
       put(op,"mode",signature,e)
     put(f,"mode",t,e)
   if not $bootStrapMode and $insideFunctorIfTrue and

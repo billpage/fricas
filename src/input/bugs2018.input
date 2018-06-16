@@ -84,7 +84,6 @@ testEquals("fl.first.factor", "4")
 
 testcase "'remove' with _"failed_""
 
-li := [2,4,3,2,5,2,7,2,2,7]
 li10 := [recip(i::IntegerMod 10) for i in 0..9]
 lir := [1, 7, 3, 9]
 f : Union(IntegerMod(10),"failed") := "failed"
@@ -101,7 +100,40 @@ tcl(l) == first(l) case SuchThat(Symbol, POLY(pF))
 testTrue("first(le) case SuchThat(Symbol, POLY(pF))")
 testTrue("tcl(le)")
 
+testcase "special matrices"
 
+am := matrix([[3.0, 4.0], [5.0, 7.0]])$DoubleFloatMatrix
+testEquals("row(am, 0)", "[[3.0, 4.0]]$DoubleFloatVector")
+testEquals("column(am, 1)", "[[4.0, 7.0]]$DoubleFloatVector")
+testEquals("copy(am)", "am")
+testEquals("map(x +-> x, am)", "am")
+testEquals("map((x, y) +-> x + y, am, am)", "2*am")
+testEquals("map((x, y) +-> x + y, am, am, 0)", "2*am")
+
+testcase "0 and 1 as signature"
+
+testTrue("Integer has 0 : () -> %")
+testTrue("Integer has 1 : () -> %")
+
+testcase "sqrt in Z_p"
+
+F := PrimeField(nextPrime 273845092384750923487509234587)
+x : F := 78345093845709384750923478509238475
+y : F := sqrt(x)
+testEquals("y^2", "x")
+x := 8596703498567034985679679876::F
+testEquals("sqrt(x)^2", "x")
+
+x := 8596703498567034985679::F
+testLibraryError("sqrt(x)")
+
+testcase "limit of Fresnel functions"
+
+testEquals("limit(fresnelC(x), x=%plusInfinity)", "1/2")
+testEquals("limit(fresnelS(x), x=%minusInfinity)", "-1/2")
+
+i1 := integrate(cos(x*y)/sqrt(x), x=0..%plusInfinity, "noPole")
+testEquals("i1", "1/sqrt(2*y/%pi)")
 
 )set output algebra on
 

@@ -1150,9 +1150,8 @@ BinaryRecursiveAggregate(S : Type) : Category == RecursiveAggregate S with
        concat(leaves left t, leaves right t)
 
    nodes x ==
-       l := empty()$List(%)
-       empty? x => l
-       concat(nodes left x, concat([x], nodes right x))
+       empty? x => empty()
+       concat(nodes left x, concat(x, nodes right x))
 
    children x ==
        l := empty()$List(%)
@@ -1190,7 +1189,7 @@ BinaryRecursiveAggregate(S : Type) : Category == RecursiveAggregate S with
 
        if S has CoercibleTo OutputForm then
            coerce(t : %) : OutputForm ==
-               empty? t =>  message("[]")$OutputForm
+               empty? t => message("[]")$OutputForm
                v := value(t)::OutputForm
                empty? left t =>
                    empty? right t => v
@@ -1405,9 +1404,8 @@ UnaryRecursiveAggregate(S : Type) : Category == RecursiveAggregate S with
       reverse! l
 
   children x ==
-      l := empty()$List(%)
-      empty? x => l
-      concat(rest x, l)
+      empty? x => empty()
+      [rest x]
 
   leaf? x ==
       empty? x => false
@@ -1488,8 +1486,15 @@ UnaryRecursiveAggregate(S : Type) : Category == RecursiveAggregate S with
 
   if % has finiteAggregate then
       last(x, n) ==
-          n > (m := #x) => error "index out of range"
-          copy rest(x, (m - n)::NonNegativeInteger)
+          xn := x
+          for i in 1..n repeat
+              empty? xn => error "index out of range"
+              xn := rest xn
+          -- xn is n nodes ahead of x
+          while not empty? xn repeat
+              xn := rest xn
+              x := rest x
+          copy x
 
   if % has finiteAggregate and S has BasicType then
       x = y ==
@@ -1679,7 +1684,7 @@ LinearAggregate(S : Type) : Category ==
    concat : (%, %) -> %
       ++ concat(u, v) returns an aggregate consisting of the elements of u
       ++ followed by the elements of v.
-      ++ Note: if \spad{w := concat(u, v)} then
+      ++ Note: if \spad{w = concat(u, v)} then
       ++ \spad{w.i = u.i for i in indices u}
       ++ and \spad{w.(j + maxIndex u) = v.j for j in indices v}.
    concat : List % -> %
@@ -2020,7 +2025,6 @@ OneDimensionalArrayAggregate(S : Type) : Category ==
         y
 
     construct l ==
---      a := new(#l)
         empty? l => empty()
         a := new(#l, first l)
         for i in minIndex(a).. for x in l repeat qsetelt!(a, i, x)
@@ -2371,8 +2375,7 @@ ListAggregate(S : Type) : Category == Join(StreamAggregate S,
        removeDuplicates! l ==
            p := l
            while not empty? p repeat
-               p := setrest!(p, remove!((x : S) : Boolean +-> x = first p,
-                                        rest p))
+               p := setrest!(p, remove!(first p, rest p))
            l
 
    if S has OrderedSet then

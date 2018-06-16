@@ -146,9 +146,6 @@ macroExpand(x,e) ==   --not worked out yet
   macroExpandList(x,e)
 
 macroExpandList(l,e) ==
-  -- macros should override niladic props
-  (l is [name]) and IDENTP name and GETDATABASE(name, 'NILADIC) and
-        (u := get(name, 'macro, e)) => macroExpand(u,e)
   [macroExpand(x,e) for x in l]
 
 compDefineCategory1(df is ['DEF,form,sig,sc,body],m,e,prefix,fal) ==
@@ -274,7 +271,7 @@ compDefineCategory2(form,signature,specialCases,body,m,e,
     body:=
         ['PROG1, ['LET, g:= GENSYM(), body],
                  ['SETELT, g, 0, mkConstructor(sform)]]
-    fun := compile [op', ['category_functor, sargl, body]]
+    fun := do_compile [op', ['category_functor, sargl, body]]
 
 --  5. give operator a 'modemap property
     pairlis:= [[a,:v] for a in argl for v in $FormalMapVariableList]
@@ -402,7 +399,7 @@ compDefineFunctor1(df is ['DEF,form,signature,$functorSpecialCases,body],
     lamOrSlam :=
         $mutableDomain => 'mutable_domain_functor
         'domain_functor
-    fun:= compile SUBLIS($pairlis, [op',[lamOrSlam,argl,body']])
+    fun:= do_compile(SUBLIS($pairlis, [op', [lamOrSlam, argl, body']]))
     --The above statement stops substitutions gettting in one another's way
 --+
     operationAlist := SUBLIS($pairlis,$lisplibOperationAlist)
@@ -811,13 +808,13 @@ putInLocalDomainReferences (def := [opName,[lam,varl,body]]) ==
 
 
 compileCases(x,$e) == -- $e is referenced in compile
-    compile x
+    do_compile x
 
 isLocalFunction op ==
     null member(op, $formalArgList) and
         getmode(op, $e) is ['Mapping, :.]
 
-compile u ==
+do_compile u ==
   [op,lamExpr] := u
   if $suffix then
     $suffix:= $suffix+1
@@ -1002,7 +999,7 @@ doIt(item,$predl) ==
     RPLACA(item,first u)
     RPLACD(item,rest u)
     doIt(item,$predl)
-  item is ['LET,lhs,rhs,:.] =>
+  item is [":=", lhs, rhs, :.] =>
     not (compOrCroak(item,$EmptyMode,$e) is [code,.,$e]) =>
       stackSemanticError(["cannot compile assigned value to",:bright lhs],nil)
     not (code is ['LET,lhs',rhs',:.] and atom lhs') =>
