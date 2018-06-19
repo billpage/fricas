@@ -165,6 +165,7 @@ AnyFunctions1(S : Type) : with
 
         retract a ==
             retractable? a => obj(a) pretend S
+            output("Debug Any: ",paren [dom(a)::OutputForm,Sexpr::OutputForm])$OutputPackage
             error "Cannot retract value."
 
 )abbrev domain VOID Void

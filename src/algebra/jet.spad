@@ -2796,8 +2796,10 @@ JetBundleExpression(JB : JBC) : Cat == Def where
         op := operator(name)$BOP
         setProperty(op, "%specialDisp"::Symbol,
                     coerce(hidedisp)$AnyFunctions1(L % -> OUT))
+        -- Another bad hack! Force specialDiff to be EI because derivative is
+        -- derivative from EI.
         setProperty(op, "%specialDiff"::Symbol,
-                    coerce(hidediff)$AnyFunctions1((L %, Sy) -> %))
+                    coerce(hidediff pretend ((L EI, Sy) -> EI))$AnyFunctions1((L EI, Sy) -> EI))
         res : % := 0
         for k in num..1 by -1  for arg in args repeat
             da := differentiate(arg, x)
@@ -2813,7 +2815,7 @@ JetBundleExpression(JB : JBC) : Cat == Def where
         setProperty(op, "%specialDisp"::Symbol,
                     coerce(hidedisp)$AnyFunctions1(L % -> OUT))
         setProperty(op, "%specialDiff"::Symbol,
-                    coerce(hidediff)$AnyFunctions1((L %, Sy) -> %))
+                    coerce(hidediff pretend ((L EI, Sy) -> EI))$AnyFunctions1((L EI, Sy) -> EI))
         args := append([sy2jbe f, #arg::%, show::%], arg)
         kernel0(op, args)
 
