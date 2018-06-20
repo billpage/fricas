@@ -5,10 +5,12 @@
 ++ Keywords: algebraic, number.
 AlgebraicNumber() : Exports == Implementation where
   Z   ==> Integer
+  N   ==> NonNegativeInteger
   FE  ==> Expression Z
   K   ==> Kernel %
   P   ==> SparseMultivariatePolynomial(Z, K)
   SUP ==> SparseUnivariatePolynomial
+  OP  ==> BasicOperator
 
   Exports ==> Join(ExpressionSpace, AlgebraicallyClosedField,
                    RetractableTo Z, RetractableTo Fraction Z,
@@ -49,6 +51,18 @@ AlgebraicNumber() : Exports == Implementation where
     Rep := FE
 
     ALGOP := '%alg
+
+    okkernel  : (OP, List %) -> %
+    okkernel(op, l) ==
+      kernel(op, l, 1 + reduce("max", [height f for f in l], 0))$K :: %
+
+    -- operators on AN are evaluated as FE!
+    elt(op : OP, args : List %) ==
+      not belong? op => error concat("Unknown operator 3: ",string(name(op)))$String
+      ((u := arity op) case N) and (#args ~= u::N)
+                                    => error "Wrong number of arguments"
+      (v := evaluate(op, args pretend List FE)$BasicOperatorFunctions1(FE)) case FE => v::%
+      okkernel(op, args)
 
     reducedSystem(m : Matrix(%)) : Matrix(Fraction(Z)) ==
         mz : Matrix(Z) := reducedSystem(m)$Rep
