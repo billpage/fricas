@@ -82,8 +82,8 @@ Taylor series expansion.
     oprecur := operator('rootOfRec)$BasicOperator
     opADE := operator('rootOfADE)$BasicOperator
 
-    setProperty(oprecur, '%dummyVar, coerce(1)$AnyFunctions1(Integer))
-    setProperty(opADE, '%dummyVar, coerce(1)$AnyFunctions1(Integer))
+    setProperty(oprecur, '%dummyVar, coerce(1)$AnyFunctions1(NonNegativeInteger))
+    setProperty(opADE, '%dummyVar, coerce(1)$AnyFunctions1(NonNegativeInteger))
 
 )if false
 
